@@ -1,5 +1,5 @@
 <?php
-$dictionary = file('dictionary.txt', FILE_IGNORE_NEW_LINES);
+$dictionary = fopen("dictionary.txt", "r") or die("Unable to open file!");
 
 $inputWord = strtolower($_POST['word']);
 
