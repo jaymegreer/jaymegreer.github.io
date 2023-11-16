@@ -42,11 +42,13 @@ function isVowel($char) {
 }
 
 $scores = array();
-foreach ($dictionary as $word) {
+while (!feof($dictionary)) {
+    $word = trim(fgets($dictionary));
     $word = strtolower($word);
     $score = calculatePenaltyScore($inputWord, $word);
     $scores[$word] = $score;
 }
+fclose($dictionary);
 
 asort($scores);
 
