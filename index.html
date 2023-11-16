@@ -4,10 +4,41 @@ $dictionary = file('dictionary.txt', FILE_IGNORE_NEW_LINES);
 $inputWord = strtolower($_POST['word']);
 
 function calculatePenaltyScore($word1, $word2) {
-    // sequence alignment logic goes here
-    // Use the penalties: Exact match = 0, Consonant/Consonant or Vowel/Vowel mismatch = 1,
-    // Vowel/Consonant mismatch = 3, Gap = 2
-    // Return the minimum penalty score
+    $word1 = strtolower($word1);
+    $word2 = strtolower($word2);
+
+    $exactMatchPenalty = 0;
+    $consonantConsonantPenalty = 1;
+    $vowelVowelPenalty = 1;
+    $vowelConsonantPenalty = 3;
+    $gapPenalty = 2;
+
+    $matrix = array_fill(0, strlen($word1) + 1, array_fill(0, strlen($word2) + 1, 0));
+
+    for ($i = 1; $i <= strlen($word1); $i++) {
+        for ($j = 1; $j <= strlen($word2); $j++) {
+            $match = ($word1[$i - 1] == $word2[$j - 1]) ? $matrix[$i - 1][$j - 1] + $exactMatchPenalty : $matrix[$i - 1][$j - 1] + $consonantConsonantPenalty;
+
+            $delete = $matrix[$i - 1][$j] + $gapPenalty;
+
+            $insert = $matrix[$i][$j - 1] + $gapPenalty;
+
+            if (isVowel($word1[$i - 1]) && isVowel($word2[$j - 1])) {
+                $replace = $match;
+            } 
+            elseif (!isVowel($word1[$i - 1]) && !isVowel($word2[$j - 1])) {
+                $replace = $match;
+            } 
+            else {
+                $replace = $match + $vowelConsonantPenalty;
+            }
+            $matrix[$i][$j] = min($delete, $insert, $replace);
+        }
+    }
+    return $matrix[strlen($word1)][strlen($word2)];
+}
+function isVowel($char) {
+    return in_array(strtolower($char), ['a', 'e', 'i', 'o', 'u']);
 }
 
 $scores = array();
