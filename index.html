@@ -1,31 +1,76 @@
 <?php
-$dictionary = file('dictionary.txt', FILE_IGNORE_NEW_LINES);
-
-$inputWord = strtolower($_POST['word']);
-
-function calculatePenaltyScore($word1, $word2) {
-    // sequence alignment logic goes here
-    // Use the penalties: Exact match = 0, Consonant/Consonant or Vowel/Vowel mismatch = 1,
-    // Vowel/Consonant mismatch = 3, Gap = 2
-    // Return the minimum penalty score
+class ComparePairs {
+    public function __invoke(array $a, array $b): bool {
+        return $a['second'] < $b['second'];
+    }
 }
 
-$scores = array();
-foreach ($dictionary as $word) {
-    $word = strtolower($word);
-    $score = calculatePenaltyScore($inputWord, $word);
-    $scores[$word] = $score;
+class SpellChecker {
+    private array $dictionary = [];
+
+    public function __construct() {
+        $this->initializeDictionary();
+    }
+
+    public function checkSpelling($inputWord) {
+        $suggestionScores = [];
+
+        foreach ($this->dictionary as $dictWord) {
+            $penalty = $this->calculatePenalty($inputWord, $dictWord);
+            $suggestionScores[] = ['first' => $dictWord, 'second' => $penalty];
+        }
+
+        usort($suggestionScores, new ComparePairs());
+
+        $numSuggestions = 10;
+        for ($i = 0; $i < min($numSuggestions, count($suggestionScores)); $i++) {
+            echo $suggestionScores[$i]['first'] . PHP_EOL;
+        }
+    }
+
+    private function initializeDictionary() {
+        $filename = "dictionary.txt";
+        $fileContent = file_get_contents($filename);
+
+        if ($fileContent === false) {
+            echo "Could not open file $filename.";
+        } else {
+            $this->dictionary = explode("\n", $fileContent);
+        }
+    }
+
+    private function calculatePenalty($word1, $word2) {
+        $penalty = 0;
+
+        for ($i = 0; $i < min(strlen($word1), strlen($word2)); ++$i) {
+            if ($word1[$i] !== $word2[$i]) {
+                if ($this->isVowel($word1[$i]) && $this->isVowel($word2[$i])) {
+                    $penalty += 1;
+                } elseif (!$this->isVowel($word1[$i]) && !$this->isVowel($word2[$i])) {
+                    $penalty += 1;
+                } else {
+                    $penalty += 3;
+                }
+            }
+        }
+
+        $penalty += abs(strlen($word1) - strlen($word2)) * 2;
+
+        return $penalty;
+    }
+
+    private function isVowel($c) {
+        return $c == 'a' || $c == 'e' || $c == 'i' || $c == 'o' || $c == 'u';
+    }
 }
 
-asort($scores);
-
-$suggestions = array_slice($scores, 0, 10);
-
-echo '<h2>Suggestions:</h2>';
-foreach ($suggestions as $word => $score) {
-    echo $word . ' (Score: ' . $score . ')<br>';
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $spellChecker = new SpellChecker();
+    $inputWord = strtolower($_POST['word']);
+    $spellChecker->checkSpelling($inputWord);
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
