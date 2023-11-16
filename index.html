@@ -1,1 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="home.css">
+    <script src="https://kit.fontawesome.com/9983de23cd.js" crossorigin="anonymous"></script>
+</head>
 
+
+<body class="main">
+
+<!-- Top Navigation Bar -->
+<div class="topnav">
+    <a href="home.php"><b> The Tire Team</b></a>
+    <a class="active" href="home.php"><i class="fa fa-fw fa-home"></i> Home</a>
+    <a href="services.php"><i class="fas fa-car"></i></i> Services</a>
+    <a href="register.php"><i class="fa-solid fa-user-plus"></i> Create Account</a>
+    <a href="login.php"><i class="fa-solid fa-user"></i> Login</a>
+    <a href="adminRetrieve.php" class="split">Admin</a>
+    <a href="logout.php" class="split"> Log Out</a>
+    
+</div>
+
+
+<!-- Intro Part -->
+<div class="card">
+    <div class="clearfix">
+        <div class="container"> 
+        <h2 class="w3-center" style="font-size: 200%"><?php echo $message; ?></h2>
+           
+            <img class="image" src="tires.webp" alt="tires" style="width:50%">
+            <p class="w3-center" style="font-size: 275%; color:white"><b>Thousands to Choose From</b></p>
+            <p class="w3-center" style="font-size: 275%"><b>All Major Brands</b></p>
+            <p class="w3-center" style="font-size: 275%"><b>New and Used</b></p>
+        </div>
+    </div>
+</div>
+
+<!-- Word Card -->
+<div class="card2">
+    <h1 class="heading2"><b>We have a huge inventory of wheels and tires,</b></h1>
+    <h1 class="heading2"><b>and we offer many different serivces!</b></h1>
+</div>
+
+
+<!-- Image Style Card -->
+<img src="carbanner.jpeg" alt="cars" width="100%">
+
+<!-- Services -->
+<div class="row"> 
+    <h1 class="heading2"><b>Our Services:</b></h1>
+    <div class="column">
+        <h3 class="w3-center"><b>Plugs & Patches</b></h2>
+        <h3 class="w3-center"><b>Rotations & Mounts</b></h2>
+    </div>
+    <div class="column">
+        <h3 class="w3-center"><b>Used Tires</b></h2>
+        <h3 class="w3-center"><b>New Tires</b></h2>
+    </div>
+    <div class="column">
+        <h3 class="w3-center"><b>Used Wheels</b></h2>
+        <h3 class="w3-center"><b>New Wheels</b></h2>
+    </div>
+</div>
+
+<!-- Car Info Form -->
+<img src="redbackground.jpeg" alt="redbackground" width="100%" height="30px">
+<div class="card2">
+    <div class="container">
+        <h1 class="heading2"><b>Car Info Form</b></h1>
+        <h2 class="heading3"><b>Let us know about you car</b></h2>
+    </div>
+    <div class="container">
+        <form action="<?php getPostback(); ?>" method="post">
+
+            <p class="heading2"><label>Car Make: <input name="make" type="text" placeholder="make" required></label></p>
+            <p class="heading2"><label>Car Model: <input name="model" type="text" placeholder="model" required></label></p>
+            <p class="heading2"><label>Car Year: <input name="year" type="text" placeholder="year" required></label></p>
+            
+            <p class="heading2"><button class='button'>Submit</button></p>
+
+            <p class="w3-center" style="font-size: 120%; color:white"><i><?php echo $formMessage; ?></i></p>
+        </form>
+    </div>
+</div>
+
+
+<!-- Contact Info -->
+<img src="redbackground.jpeg" alt="redbackground" width="100%" height="30px">
+
+</body>
+
+<footer>
+<div class="foot">
+    <h2 class="heading3" style="color:white">Contact Us:</h2>
+    <h3 class="heading3">1234 Cougar St. - Edwardsville, IL 62026</h3>
+    <h3 class="heading3">(618) 123 - 4567</h3>
+</div>
+</footer>
+
+</html>
