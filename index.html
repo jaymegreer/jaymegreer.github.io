@@ -5,21 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spell Checker</title>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 
-<body class="main">
+<body>
+    <h1><b>Spell Checker</b></h1>
 
-<div>
-    <a><b>Spell Checker</b></a>
-</div>
-
-<form action="/action_page.php">
-    <p class="w3-center" style="font-size: 275%">Spell Checker</p>
-    <label for="enter">Enter Word:</label>
-    <input type="text" id="word" name="word"><br><br>
+<form action="spell_checker.php" method="post">
+    <label for="word">Enter Word:</label>
+    <input type="text" id="word" name="word" required><br><br>
     <label for="sug">Suggestions:</label>
-    <input type="submit" value="Submit">
+    <input type="submit" value="Check">
 </form>
 
 </html>
