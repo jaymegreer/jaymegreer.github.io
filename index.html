@@ -1,3 +1,32 @@
+<?php
+$dictionary = file('pride_and_prejudice.txt', FILE_IGNORE_NEW_LINES);
+
+$inputWord = strtolower($_POST['word']);
+
+function calculatePenaltyScore($word1, $word2) {
+    // sequence alignment logic goes here
+    // Use the penalties: Exact match = 0, Consonant/Consonant or Vowel/Vowel mismatch = 1,
+    // Vowel/Consonant mismatch = 3, Gap = 2
+    // Return the minimum penalty score
+}
+
+$scores = array();
+foreach ($dictionary as $word) {
+    $word = strtolower($word);
+    $score = calculatePenaltyScore($inputWord, $word);
+    $scores[$word] = $score;
+}
+
+asort($scores);
+
+$suggestions = array_slice($scores, 0, 10);
+
+echo '<h2>Suggestions:</h2>';
+foreach ($suggestions as $word => $score) {
+    echo $word . ' (Score: ' . $score . ')<br>';
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
