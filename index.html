@@ -72,12 +72,12 @@
             return sortedSuggestions.slice(0, 10);
         }
 
-        function loadDictionary(callback) {
+        function loadDictionary() {
             fetch('dictionary.txt')
                 .then(response => response.text())
                 .then(data => {
                     const dictionary = data.split('\n').map(word => word.trim().toLowerCase());
-                    callback(dictionary);
+                    return dictionary;
                 })
                 .catch(error => console.error('Error loading dictionary:', error));
         }
@@ -86,10 +86,11 @@
             var wordInput = document.getElementById('word').value.toLowerCase();
             var suggestionBox = document.getElementById('suggestion-box');
 
-            loadDictionary(function (dictionary) {
-                var suggestions = getSuggestions(wordInput, dictionary);
-                suggestionBox.innerHTML = suggestions.length > 0 ? suggestions.join(', ') : 'No suggestions found';
-            });
+            Promise.all([loadDictionary(), wordInput])
+                .then(([dictionary, inputWord]) => {
+                    var suggestions = getSuggestions(inputWord, dictionary);
+                    suggestionBox.innerHTML = suggestions.length > 0 ? suggestions.join(', ') : 'No suggestions found';
+                });
         }
 
     </script>
