@@ -92,7 +92,7 @@ else {
 
 <form action="spell_checker.php" method="post">
     <label for="word">Enter Word:</label><br>
-    <input type="text" id="word" name="word" value="<?php echo htmlspecialchars($inputWord); ?>" required><br><br>
+    <input type="text" id="word" name="word" value=<?php echo htmlspecialchars($inputWord); ?> required><br><br>
     <input type="submit" value="Check">
 </form>
     
