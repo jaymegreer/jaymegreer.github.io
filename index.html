@@ -1,10 +1,6 @@
 <?php
 session_start();
 
-<!-- $dictionary = fopen("dictionary.txt", "r") or die("Unable to open file!");
-
-$inputWord = strtolower($_POST['word']); -->
-
 function calculatePenaltyScore($word1, $word2) {
     $word1 = strtolower($word1);
     $word2 = strtolower($word2);
@@ -102,9 +98,32 @@ else {
     
 <h2>Suggestions:</h2>
 <?php
-foreach ($suggestions as $word => $score) {
-    echo $word . ' (Score: ' . $score . ')<br>';
-    } ?>
+    <div id="suggestion-box">
+        foreach ($suggestions as $word => $score) {
+            echo $word . ' (Score: ' . $score . ')<br>';
+        }
+        ?>
+    </div>
+
+    <script>
+        function checkSpell() {
+            var wordInput = document.getElementById('word').value;
+            var suggestionBox = document.getElementById('suggestion-box');
+
+            fetch('spell_checker.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'word=' + encodeURIComponent(wordInput),
+            })
+            .then(response => response.text())
+            .then(data => {
+                suggestionBox.innerHTML = data;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
 
 </body>
 </html>
