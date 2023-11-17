@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 session_start();
 
 function calculatePenaltyScore($word1, $word2) {
@@ -76,7 +76,7 @@ else {
 
     $suggestions = getSuggestions($inputWord, $dictionary);
 }
-?>
+?> -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -90,39 +90,87 @@ else {
 <body>
     <h1><b>Spell Checker</b></h1>
 
-    <form action="" method="post" onsubmit="checkSpell(); return false;">
+    <form id="spellCheckForm">
         <label for="word">Enter Word:</label><br>
         <input required type="text" id="word" name="word"><br><br>
-        <input type="submit" value="Check">
+        <input type="submit" value="Check" onclick="checkSpell()">
     </form>
 
     <h2>Suggestions:</h2>
-    <div id="suggestion-box">
-        <?php
-        foreach ($suggestions as $word => $score) {
-            echo $word . ' (Score: ' . $score . ')<br>';
-        }
-        ?>
-    </div>
-
+    
     <script>
+        function calculatePenaltyScore(word1, word2) {
+            word1 = word1.toLowerCase();
+            word2 = word2.toLowerCase();
+
+            var exactMatchPenalty = 0;
+            var consonantConsonantPenalty = 1;
+            var vowelVowelPenalty = 1;
+            var vowelConsonantPenalty = 3;
+            var gapPenalty = 2;
+
+            var matrix = Array.from({ length: word1.length + 1 }, () => Array(word2.length + 1).fill(0));
+
+            for ($i = 1; $i <= word1.length; $i++) {
+                for ($j = 1; $j <= word2.length; $j++) {
+                    var match = (word1[i - 1] === word2[j - 1]) ? matrix[i - 1][j - 1] + exactMatchPenalty : matrix[i - 1][j - 1] + consonantConsonantPenalty;
+                    var deleteCost = matrix[i - 1][j] + gapPenalty;
+                    var insertCost = matrix[i][j - 1] + gapPenalty;
+
+                    var replace;
+                    if (isVowel(word1[i - 1]) && isVowel(word2[j - 1])) {
+                        replace = match;
+                    } 
+                    else if (!isVowel(word1[i - 1]) && !isVowel(word2[j - 1])) {
+                        replace = match;
+                    } 
+                    else {
+                        replace = match + vowelConsonantPenalty;
+                    }
+
+                    matrix[i][j] = Math.min(deleteCost, insertCost, replace);
+                }
+            }
+            return matrix[word1.length][word2.length];
+        }
+
+        function isVowel(char) {
+            return ['a', 'e', 'i', 'o', 'u'].includes(char.toLowerCase());
+        }
+
+        function getSuggestions(inputWord, dictionary) {
+            var scores = {};
+
+            dictionary.forEach(function (word) {
+                var score = calculatePenaltyScore(inputWord, word);
+                scores[word] = score;
+            });
+            var sortedSuggestions = Object.keys(scores).sort(function (a, b) {
+                return scores[a] - scores[b];
+            });
+            return sortedSuggestions.slice(0, 10);
+        }
+
+        function loadDictionary(callback) {
+            fetch('dictionary.txt')
+                .then(response => response.text())
+                .then(data => {
+                    const dictionary = data.split('\n').map(word => word.trim().toLowerCase());
+                    callback(dictionary);
+                })
+                .catch(error => console.error('Error loading dictionary:', error));
+        }
+
         function checkSpell() {
-            var wordInput = document.getElementById('word').value;
+            var wordInput = document.getElementById('word').value.toLowerCase();
             var suggestionBox = document.getElementById('suggestion-box');
 
-            fetch('spell_checker.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'word=' + encodeURIComponent(wordInput),
-            })
-            .then(response => response.text())
-            .then(data => {
-                suggestionBox.innerHTML = data;
-            })
-            .catch(error => console.error('Error:', error));
+            loadDictionary(function (dictionary) {
+                var suggestions = getSuggestions(wordInput, dictionary);
+                suggestionBox.innerHTML = suggestions.length > 0 ? suggestions.join(', ') : 'No suggestions found';
+            });
         }
+
     </script>
 
 </body>
