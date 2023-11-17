@@ -90,15 +90,15 @@ else {
 <body>
     <h1><b>Spell Checker</b></h1>
 
-<form action="spell_checker.php" method="post">
-    <label for="word">Enter Word:</label><br>
-    <input type="text" id="word" name="word" value=<?php echo htmlspecialchars($inputWord); ?> required><br><br>
-    <input type="submit" value="Check">
-</form>
-    
-<h2>Suggestions:</h2>
-<?php
+    <form action="spell_checker.php" method="post" onsubmit="checkSpell(); return false;">
+        <label for="word">Enter Word:</label><br>
+        <input type="text" id="word" name="word" value="<?php echo htmlspecialchars($inputWord); ?>" required><br><br>
+        <input type="submit" value="Check">
+    </form>
+
+    <h2>Suggestions:</h2>
     <div id="suggestion-box">
+        <?php
         foreach ($suggestions as $word => $score) {
             echo $word . ' (Score: ' . $score . ')<br>';
         }
