@@ -1,7 +1,9 @@
 <?php
-$dictionary = fopen("dictionary.txt", "r") or die("Unable to open file!");
+session_start();
 
-$inputWord = strtolower($_POST['word']);
+<!-- $dictionary = fopen("dictionary.txt", "r") or die("Unable to open file!");
+
+$inputWord = strtolower($_POST['word']); -->
 
 function calculatePenaltyScore($word1, $word2) {
     $word1 = strtolower($word1);
@@ -37,26 +39,46 @@ function calculatePenaltyScore($word1, $word2) {
     }
     return $matrix[strlen($word1)][strlen($word2)];
 }
+
+
 function isVowel($char) {
     return in_array(strtolower($char), ['a', 'e', 'i', 'o', 'u']);
 }
 
-$scores = array();
-while (!feof($dictionary)) {
-    $word = trim(fgets($dictionary));
-    $word = strtolower($word);
-    $score = calculatePenaltyScore($inputWord, $word);
-    $scores[$word] = $score;
+
+function getSuggestions($inputWord, $dictionary) {
+    $scores = array();
+
+    while (!feof($dictionary)) {
+        $word = trim(fgets($dictionary));
+        $word = strtolower($word);
+        $score = calculatePenaltyScore($inputWord, $word);
+        $scores[$word] = $score;
+    }
+
+    fclose($dictionary);
+
+    asort($scores);
+
+    return array_slice($scores, 0, 10);
 }
-fclose($dictionary);
 
-asort($scores);
 
-$suggestions = array_slice($scores, 0, 10);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $inputWord = strtolower($_POST['word']);
 
-echo '<h2>Suggestions:</h2>';
-foreach ($suggestions as $word => $score) {
-    echo $word . ' (Score: ' . $score . ')<br>';
+    $_SESSION['inputWord'] = $inputWord;
+
+    $dictionary = fopen("dictionary.txt", "r") or die("Unable to open file!");
+
+    $suggestions = getSuggestions($inputWord, $dictionary);
+} 
+else {
+    $inputWord = isset($_SESSION['inputWord']) ? $_SESSION['inputWord'] : '';
+
+    $dictionary = fopen("dictionary.txt", "r") or die("Unable to open file!");
+
+    $suggestions = getSuggestions($inputWord, $dictionary);
 }
 ?>
 
@@ -74,8 +96,15 @@ foreach ($suggestions as $word => $score) {
 
 <form action="spell_checker.php" method="post">
     <label for="word">Enter Word:</label><br>
-    <input type="text" id="word" name="word" required><br><br>
+    <input type="text" id="word" name="word" value="<?php echo htmlspecialchars($inputWord); ?>" required><br><br>
     <input type="submit" value="Check">
 </form>
+    
+<h2>Suggestions:</h2>
+<?php
+foreach ($suggestions as $word => $score) {
+    echo $word . ' (Score: ' . $score . ')<br>';
+    } ?>
 
+</body>
 </html>
