@@ -20,6 +20,8 @@
     <div id="suggestion-box"></div>
     
     <script>
+        var dictionary = [];
+        
         function calculatePenaltyScore(word1, word2) {
             word1 = word1.toLowerCase();
             word2 = word2.toLowerCase();
@@ -76,8 +78,7 @@
             fetch('dictionary.txt')
                 .then(response => response.text())
                 .then(data => {
-                    const dictionary = data.split('\n').map(word => word.trim().toLowerCase());
-                    return dictionary;
+                    dictionary = data.split('\n').map(word => word.trim().toLowerCase());
                 })
                 .catch(error => console.error('Error loading dictionary:', error));
         }
@@ -86,13 +87,17 @@
             var wordInput = document.getElementById('word').value.toLowerCase();
             var suggestionBox = document.getElementById('suggestion-box');
 
-            Promise.all([loadDictionary(), wordInput])
-                .then(([dictionary, inputWord]) => {
-                    var suggestions = getSuggestions(inputWord, dictionary);
+           if (dictionary.length === 0) {
+                loadDictionary().then(function () {
+                    var suggestions = getSuggestions(wordInput, dictionary);
                     suggestionBox.innerHTML = suggestions.length > 0 ? suggestions.join(', ') : 'No suggestions found';
                 });
+            } 
+           else {
+                var suggestions = getSuggestions(wordInput, dictionary);
+                suggestionBox.innerHTML = suggestions.length > 0 ? suggestions.join(', ') : 'No suggestions found';
+            }
         }
-
     </script>
 
 </body>
