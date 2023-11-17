@@ -1,83 +1,3 @@
-<!-- <?php
-session_start();
-
-function calculatePenaltyScore($word1, $word2) {
-    $word1 = strtolower($word1);
-    $word2 = strtolower($word2);
-
-    $exactMatchPenalty = 0;
-    $consonantConsonantPenalty = 1;
-    $vowelVowelPenalty = 1;
-    $vowelConsonantPenalty = 3;
-    $gapPenalty = 2;
-
-    $matrix = array_fill(0, strlen($word1) + 1, array_fill(0, strlen($word2) + 1, 0));
-
-    for ($i = 1; $i <= strlen($word1); $i++) {
-        for ($j = 1; $j <= strlen($word2); $j++) {
-            $match = ($word1[$i - 1] == $word2[$j - 1]) ? $matrix[$i - 1][$j - 1] + $exactMatchPenalty : $matrix[$i - 1][$j - 1] + $consonantConsonantPenalty;
-
-            $delete = $matrix[$i - 1][$j] + $gapPenalty;
-
-            $insert = $matrix[$i][$j - 1] + $gapPenalty;
-
-            if (isVowel($word1[$i - 1]) && isVowel($word2[$j - 1])) {
-                $replace = $match;
-            } 
-            elseif (!isVowel($word1[$i - 1]) && !isVowel($word2[$j - 1])) {
-                $replace = $match;
-            } 
-            else {
-                $replace = $match + $vowelConsonantPenalty;
-            }
-            $matrix[$i][$j] = min($delete, $insert, $replace);
-        }
-    }
-    return $matrix[strlen($word1)][strlen($word2)];
-}
-
-
-function isVowel($char) {
-    return in_array(strtolower($char), ['a', 'e', 'i', 'o', 'u']);
-}
-
-
-function getSuggestions($inputWord, $dictionary) {
-    $scores = array();
-
-    while (!feof($dictionary)) {
-        $word = trim(fgets($dictionary));
-        $word = strtolower($word);
-        $score = calculatePenaltyScore($inputWord, $word);
-        $scores[$word] = $score;
-    }
-
-    fclose($dictionary);
-
-    asort($scores);
-
-    return array_slice($scores, 0, 10);
-}
-
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $inputWord = strtolower($_POST['word']);
-
-    $_SESSION['inputWord'] = $inputWord;
-
-    $dictionary = fopen("dictionary.txt", "r") or die("Unable to open file!");
-
-    $suggestions = getSuggestions($inputWord, $dictionary);
-} 
-else {
-    $inputWord = isset($_SESSION['inputWord']) ? $_SESSION['inputWord'] : '';
-
-    $dictionary = fopen("dictionary.txt", "r") or die("Unable to open file!");
-
-    $suggestions = getSuggestions($inputWord, $dictionary);
-}
-?> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,6 +17,7 @@ else {
     </form>
 
     <h2>Suggestions:</h2>
+    <div id="suggestion-box"></div>
     
     <script>
         function calculatePenaltyScore(word1, word2) {
@@ -111,8 +32,8 @@ else {
 
             var matrix = Array.from({ length: word1.length + 1 }, () => Array(word2.length + 1).fill(0));
 
-            for ($i = 1; $i <= word1.length; $i++) {
-                for ($j = 1; $j <= word2.length; $j++) {
+            for (var i = 1; i <= word1.length; i++) {
+                for (var j = 1; j <= word2.length; j++) {
                     var match = (word1[i - 1] === word2[j - 1]) ? matrix[i - 1][j - 1] + exactMatchPenalty : matrix[i - 1][j - 1] + consonantConsonantPenalty;
                     var deleteCost = matrix[i - 1][j] + gapPenalty;
                     var insertCost = matrix[i][j - 1] + gapPenalty;
