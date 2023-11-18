@@ -76,28 +76,38 @@
 
         function loadDictionary() {
             fetch('dictionary.txt')
-                .then(response => response.text())
-                .then(data => {
-                    dictionary = data.split('\n').map(word => word.trim().toLowerCase());
-                })
-                .catch(error => console.error('Error loading dictionary:', error));
+            .then(response => response.text())
+            .then(data => {
+                dictionary = data.split('\n').map(word => word.trim());
+            })
+        .catch(error => console.error('Error loading dictionary:', error));
         }
 
+        document.addEventListener('DOMContentLoaded', loadDictionary);
+        
         function checkSpell() {
             var wordInput = document.getElementById('word').value.toLowerCase();
             var suggestionBox = document.getElementById('suggestion-box');
 
-           if (dictionary.length === 0) {
-                loadDictionary().then(function () {
-                    var suggestions = getSuggestions(wordInput, dictionary);
-                    suggestionBox.innerHTML = suggestions.length > 0 ? suggestions.join(', ') : 'No suggestions found';
-                });
-            } 
-           else {
-                var suggestions = getSuggestions(wordInput, dictionary);
-                suggestionBox.innerHTML = suggestions.length > 0 ? suggestions.join(', ') : 'No suggestions found';
+            if (wordInput.trim() === '') {
+                suggestionBox.innerHTML = 'Please enter a word.';
+                return;
+            }
+
+            var suggestions = getSuggestions(wordInput, dictionary);
+
+            if (suggestions.length === 0) {
+                suggestionBox.innerHTML = 'No suggestions found.';
+                return;
+            }
+
+            suggestionBox.innerHTML = '<b>Suggestions:</b><br>';
+
+            for (var i = 0; i < suggestions.length; i++) {
+                suggestionBox.innerHTML += suggestions[i] + '<br>';
             }
         }
+
     </script>
 
 </body>
