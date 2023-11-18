@@ -10,7 +10,7 @@
 <body>
     <h1><b>Spell Checker</b></h1>
 
-    <form id="spellCheckForm"">
+    <form id="spellCheckForm">
         <label for="word">Enter Word:</label><br>
         <input required type="text" id="word" name="word"><br><br>
         <input type="submit" value="Check" onclick="checkSpell()">
@@ -65,7 +65,7 @@
         }
 
         function isVowel(char) {
-            return ['a', 'e', 'i', 'o', 'u'].includes(char.toLowerCase());
+            return ['a', 'e', 'i', 'o', 'u'].includes(char);
         }
 
         function getSuggestions(inputWord, dictionary) {
