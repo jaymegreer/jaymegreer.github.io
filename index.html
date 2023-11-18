@@ -52,8 +52,15 @@
                     }
 
                     matrix[i][j] = Math.min(deleteCost, insertCost, replace);
+                    
+                    // Debugging output
+                    console.log(`(${i}, ${j}): Match=${match}, Delete=${deleteCost}, Insert=${insertCost}, Replace=${replace}, Current Score=${matrix[i][j]}`);
                 }
             }
+
+            // Final penalty score deubgging output
+            console.log('Final Penalty Score:', matrix[word1.length][word2.length]);
+            
             return matrix[word1.length][word2.length];
         }
 
