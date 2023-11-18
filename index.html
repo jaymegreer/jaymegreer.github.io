@@ -32,36 +32,67 @@
             var vowelConsonantPenalty = 3;
             var gapPenalty = 2;
 
-            var matrix = Array.from({ length: word1.length + 1 }, () => Array(word2.length + 1).fill(0));
+            var matrix = Array.from({ length: word1.length + 1 }, (_, i) => Array(word2.length + 1).fill(0));
 
-            for (var i = 1; i <= word1.length; i++) {
-                for (var j = 1; j <= word2.length; j++) {
-                    var match = (word1[i - 1] === word2[j - 1]) ? matrix[i - 1][j - 1] + exactMatchPenalty : matrix[i - 1][j - 1] + consonantConsonantPenalty;
-                    var insertCost = matrix[i][j - 1] + gapPenalty;
+            for (var i = 0; i <= word1.length; i++) {
+                for (var j = 0; j <= word2.length; j++) {
+        // Adjust the condition for the first row and column to add a '-' before each character
+                    if (i === 0 && j > 0) {
+                        matrix[i][j] = matrix[i][j - 1] + gapPenalty;
+                    } else if (i > 0 && j === 0) {
+                        matrix[i][j] = matrix[i - 1][j] + gapPenalty;
+                    } else if (i > 0 && j > 0) {
+                        var match = (word1[i - 1] === word2[j - 1]) ? matrix[i - 1][j - 1] + exactMatchPenalty : matrix[i - 1][j - 1] + consonantConsonantPenalty;
+                        var insertCost = matrix[i][j - 1] + gapPenalty;
 
-                    var replace;
-                    if (isVowel(word1[i - 1]) && isVowel(word2[j - 1])) {
-                        replace = match;
-                    } 
-                    else if (!isVowel(word1[i - 1]) && !isVowel(word2[j - 1])) {
-                        replace = match;
-                    } 
-                    else {
-                        replace = match + vowelConsonantPenalty;
+                        var replace;
+                        if (isVowel(word1[i - 1]) && isVowel(word2[j - 1])) {
+                            replace = match;
+                        } else if (!isVowel(word1[i - 1]) && !isVowel(word2[j - 1])) {
+                            replace = match;
+                        } else {
+                            replace = match + vowelConsonantPenalty;
+                        }
+        
+                        matrix[i][j] = Math.min(insertCost, replace);
                     }
 
-                    matrix[i][j] = Math.min(insertCost, replace);
-                    
                     // Debugging output 
-                    console.log(`(${i}, ${j}): Match=${match}, Insert=${insertCost}, Replace=${replace}, Current Score=${matrix[i][j]}`);
+                    console.log(`(${i}, ${j}): Current Score=${matrix[i][j]}`);
+
+                    //return matrix[word1.length][word2.length];
                 }
             }
+ // /////           
 
-            // Final penalty score deubgging output
-            console.log('Final Penalty Score:', matrix[word1.length][word2.length]);
+ //            for (var i = 1; i <= word1.length; i++) {
+ //                for (var j = 1; j <= word2.length; j++) {
+ //                    var match = (word1[i - 1] === word2[j - 1]) ? matrix[i - 1][j - 1] + exactMatchPenalty : matrix[i - 1][j - 1] + consonantConsonantPenalty;
+ //                    var insertCost = matrix[i][j - 1] + gapPenalty;
+
+ //                    var replace;
+ //                    if (isVowel(word1[i - 1]) && isVowel(word2[j - 1])) {
+ //                        replace = match;
+ //                    } 
+ //                    else if (!isVowel(word1[i - 1]) && !isVowel(word2[j - 1])) {
+ //                        replace = match;
+ //                    } 
+ //                    else {
+ //                        replace = match + vowelConsonantPenalty;
+ //                    }
+
+ //                    matrix[i][j] = Math.min(insertCost, replace);
+                    
+ //                    // Debugging output 
+ //                    console.log(`(${i}, ${j}): Match=${match}, Insert=${insertCost}, Replace=${replace}, Current Score=${matrix[i][j]}`);
+ //                }
+ //            }
+
+ //            // Final penalty score deubgging output
+ //            console.log('Final Penalty Score:', matrix[word1.length][word2.length]);
             
-            return matrix[word1.length][word2.length];
-        }
+ //            return matrix[word1.length][word2.length];
+ //        }
 
         function isVowel(char) {
             return ['a', 'e', 'i', 'o', 'u'].includes(char);
