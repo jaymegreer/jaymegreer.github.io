@@ -96,19 +96,19 @@
             var wordInput = document.getElementById('word').value.toLowerCase();
             var suggestionBox = document.getElementById('suggestion-box');
 
+            suggestionBox.innerHTML = '';
+
             if (wordInput.trim() === '') {
-                suggestionBox.innerHTML = 'Please enter a word.';
+                suggestionBox.innerHTML = 'Please enter a word.' + '<br>';
                 return;
             }
 
             var suggestions = getSuggestions(wordInput, dictionary);
 
             if (suggestions.length === 0) {
-                suggestionBox.innerHTML = 'No suggestions found.';
+                suggestionBox.innerHTML = 'No suggestions found.' + '<br>';
                 return;
             }
-
-            suggestionBox.innerHTML += '<br>';
 
             for (var i = 0; i < suggestions.length; i++) {
                 suggestionBox.innerHTML += suggestions[i] + '<br>';
