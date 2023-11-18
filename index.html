@@ -18,9 +18,6 @@
 
     <h2>Suggestions:</h2>
     <div id="suggestion-box"></div>
-
-    <h2>Debug:</h2>
-    <div id="debug-info"></div>
     
     <script>
         var dictionary = [];
@@ -36,9 +33,6 @@
             var gapPenalty = 2;
 
             var matrix = Array.from({ length: word1.length + 1 }, () => Array(word2.length + 1).fill(0));
-
-            // Clear previous debug info
-            document.getElementById('debug-info').innerHTML = '';
 
             for (var i = 1; i <= word1.length; i++) {
                 for (var j = 1; j <= word2.length; j++) {
@@ -60,12 +54,12 @@
                     matrix[i][j] = Math.min(deleteCost, insertCost, replace);
                     
                     // Debugging output
-                    document.getElementById('debug-info').innerHTML += `(${i}, ${j}): Match=${match}, Delete=${deleteCost}, Insert=${insertCost}, Replace=${replace}, Current Score=${matrix[i][j]}<br>`;
+                    console.log(`(${i}, ${j}): Match=${match}, Delete=${deleteCost}, Insert=${insertCost}, Replace=${replace}, Current Score=${matrix[i][j]}`);
                 }
             }
 
             // Final penalty score deubgging output
-            document.getElementById('debug-info').innerHTML += `<br>Final Penalty Score: ${matrix[word1.length][word2.length]}`;
+            console.log('Final Penalty Score:', matrix[word1.length][word2.length]);
             
             return matrix[word1.length][word2.length];
         }
