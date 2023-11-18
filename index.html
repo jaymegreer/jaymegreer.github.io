@@ -18,6 +18,9 @@
 
     <h2>Suggestions:</h2>
     <div id="suggestion-box"></div>
+
+    <h2>Debug:</h2>
+    <div id="debug-info"></div>
     
     <script>
         var dictionary = [];
@@ -33,6 +36,9 @@
             var gapPenalty = 2;
 
             var matrix = Array.from({ length: word1.length + 1 }, () => Array(word2.length + 1).fill(0));
+
+            // Clear previous debug info
+            document.getElementById('debug-info').innerHTML = '';
 
             for (var i = 1; i <= word1.length; i++) {
                 for (var j = 1; j <= word2.length; j++) {
