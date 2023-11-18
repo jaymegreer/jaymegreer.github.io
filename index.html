@@ -96,22 +96,22 @@
             var wordInput = document.getElementById('word').value.toLowerCase();
             var suggestionBox = document.getElementById('suggestion-box');
 
-            suggestionBox.textContent = '';
+            suggestionBox.innerHTML = '';
 
             if (wordInput.trim() === '') {
-                suggestionBox.textContent = 'Please enter a word.' + '<br>';
+                suggestionBox.innerHTML = 'Please enter a word.' + '<br>';
                 return;
             }
 
             var suggestions = getSuggestions(wordInput, dictionary);
 
             if (suggestions.length === 0) {
-                suggestionBox.textContent = 'No suggestions found.' + '<br>';
+                suggestionBox.innerHTML = 'No suggestions found.' + '<br>';
                 return;
             }
 
             for (var i = 0; i < suggestions.length; i++) {
-                suggestionBox.textContent += suggestions[i] + '<br>';
+                suggestionBox.innerHTML += suggestions[i] + '<br>';
             }
         }
 
