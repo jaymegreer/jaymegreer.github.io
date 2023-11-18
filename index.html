@@ -37,7 +37,6 @@
             for (var i = 1; i <= word1.length; i++) {
                 for (var j = 1; j <= word2.length; j++) {
                     var match = (word1[i - 1] === word2[j - 1]) ? matrix[i - 1][j - 1] + exactMatchPenalty : matrix[i - 1][j - 1] + consonantConsonantPenalty;
-                    //var deleteCost = matrix[i - 1][j] + gapPenalty;
                     var insertCost = matrix[i][j - 1] + gapPenalty;
 
                     var replace;
@@ -51,9 +50,9 @@
                         replace = match + vowelConsonantPenalty;
                     }
 
-                    matrix[i][j] = Math.min(insertCost, replace); //deleteCost
+                    matrix[i][j] = Math.min(insertCost, replace);
                     
-                    // Debugging output //Delete=${deleteCost},
+                    // Debugging output 
                     console.log(`(${i}, ${j}): Match=${match}, Insert=${insertCost}, Replace=${replace}, Current Score=${matrix[i][j]}`);
                 }
             }
